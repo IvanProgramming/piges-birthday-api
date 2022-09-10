@@ -1,0 +1,3 @@
+name = "piges-birthday-api"
+main = "src/index.ts"
+compatibility_date = "2022-09-10"
