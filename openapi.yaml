@@ -1,0 +1,77 @@
+openapi: 3.0.3
+info:
+  title: Birthday API
+  version: '1.0'
+  description: Minipigs birthdays API, based on google sheets form
+  contact:
+    name: Ivan
+    url: https://t.me/ivanprogramming
+  license:
+    name: GNU AGPLv3
+    url: https://www.gnu.org/licenses/agpl.txt
+  x-logo:
+    url: ''
+servers:
+  - url: https://birthday.ivanisplaying.xyz
+    description: "\t"
+paths:
+  /birthdays:
+    summary: Lists all birthdays of minipigs, may be filtered by date
+    description: ''
+    get:
+      tags: []
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+  /today/birthday:
+    summary: Birthdays today
+    description: "\t"
+    get:
+      tags: []
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+components:
+  schemas:
+    birthday:
+      required:
+        - name
+        - date
+      type: object
+      properties:
+        date:
+          required:
+            - localizedString
+            - currentYear
+            - monthAndDate
+          type: object
+          properties:
+            localizedString:
+              type: string
+            currentYear:
+              type: string
+            monthAndDate:
+              type: string
+        name:
+          type: string
+  responses:
+    '200':
+      content:
+        application/json:
+          schema:
+            required:
+              - data
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/birthday'
+      description: Operation succeeded
+  securitySchemes: {}
+  headers: {}
+  parameters: {}
+externalDocs:
+  url: https://github.com/ivanprogramming
+tags: []
+security: []
