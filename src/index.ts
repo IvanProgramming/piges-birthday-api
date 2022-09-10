@@ -25,6 +25,16 @@ class Birthday {
 }
 
 
+function parseRussianDateAndLongMonth(date: string): Date {
+    let monthNames = [
+        "января", "февраля", "марта", "апреля", "мая", "июня",
+        "июля", "августа", "сентября", "октября", "ноября", "декабря"
+    ]
+    let day = +(date.split(' ')[0])
+    let month = monthNames.indexOf(date.split(' ')[1])
+    return new Date((new Date()).getFullYear(), month, day)
+}
+
 const getData = async (fetcher: Fetcher, apiUrl: string, sheetsDbCredentials: string, kvNamespace: KVNamespace): Promise<Object[]> => {
     let kvValue = await kvNamespace.get('cache')
     if (kvValue) {
@@ -54,6 +64,37 @@ app.get('/today/birthdays', async (c) => {
         if (birthday == today.toLocaleString("ru-RU", {day: 'numeric', month: 'long'})) {
             // @ts-ignore
             birthdays.push(new Birthday(new FullDate(today), data[i]["Минипиг"]))
+        }
+    }
+    return c.json({data: birthdays})
+})
+
+app.get('/birthdays', async (c) => {
+    let data = await getData(c.req.fetcher!, c.env.SHEETS_DB_API_URL, c.env.SHEETS_DB_CREDENTIALS, c.env.KV_NAMESPACE)
+    let birthdays = []
+    let selectedDate: Date | undefined = undefined
+    if (c.req.query("date") != null) {
+        try {
+            let day = +(c.req.query("date")!.split('.')[0])
+            let month = +(c.req.query("date")!.split('.')[1])
+            selectedDate = new Date((new Date()).getFullYear(), month - 1, day)
+            console.log(selectedDate)
+        } catch (e) {
+            return c.json({error: "Invalid date"})
+        }
+    }
+
+    for (let i = 0; i < data.length; i++) {
+        if (selectedDate == undefined) {
+            // @ts-ignore
+            birthdays.push(new Birthday(new FullDate(parseRussianDateAndLongMonth(data[i]["День рождение"])), data[i]["Минипиг"]))
+        } else {
+            // @ts-ignore
+            let birthday = data[i]["День рождение"].trim()
+            if (birthday == selectedDate!.toLocaleString("ru-RU", {day: 'numeric', month: 'long'})) {
+                // @ts-ignore
+                birthdays.push(new Birthday(new FullDate(selectedDate), data[i]["Минипиг"]))
+            }
         }
     }
     return c.json({data: birthdays})
