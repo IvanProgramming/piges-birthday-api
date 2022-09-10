@@ -4,7 +4,7 @@ compatibility_date = "2022-09-10"
 workers_dev = true
 
 kv_namespaces = [
-    { binding = "KV_NAMESPACE", id = "" }
+    { binding = "KV_NAMESPACE", id = "", preview_id = "" },
 ]
 
 [site]

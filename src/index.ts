@@ -1,8 +1,9 @@
 import { Hono } from 'hono'
 import { serveStatic } from 'hono/serve-static.module'
+import { cors } from 'hono/cors'
 
 const app = new Hono()
-
+app.use("*", cors())
 class FullDate {
     localizedString: string = ""
     currentYear: string = ""
