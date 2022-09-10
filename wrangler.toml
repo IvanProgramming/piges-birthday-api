@@ -2,3 +2,11 @@ name = "piges-birthday-api"
 main = "src/index.ts"
 compatibility_date = "2022-09-10"
 workers_dev = true
+
+kv_namespaces = [
+    { binding = "KV_NAMESPACE", id = "" }
+]
+
+[site]
+bucket = "./public"
+

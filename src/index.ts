@@ -1,4 +1,5 @@
-import {Hono} from 'hono'
+import { Hono } from 'hono'
+import { serveStatic } from 'hono/serve-static.module'
 
 const app = new Hono()
 
@@ -99,5 +100,7 @@ app.get('/birthdays', async (c) => {
     }
     return c.json({data: birthdays})
 })
+
+app.get('/favicon.ico', serveStatic({path: './favicon.ico'}))
 
 export default app
