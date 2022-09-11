@@ -10,3 +10,5 @@ kv_namespaces = [
 [site]
 bucket = "./public"
 
+[vars]
+TIME_ZONE = "Europe/Moscow"

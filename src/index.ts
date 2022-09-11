@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
 import { serveStatic } from 'hono/serve-static.module'
 import { cors } from 'hono/cors'
+import { getTimezoneOffset } from 'date-fns-tz'
 
 const app = new Hono()
 app.use("*", cors())
@@ -58,7 +59,7 @@ const getData = async (fetcher: Fetcher, apiUrl: string, sheetsDbCredentials: st
 
 app.get('/today/birthdays', async (c) => {
     let data = await getData(c.req.fetcher!, c.env.SHEETS_DB_API_URL, c.env.SHEETS_DB_CREDENTIALS, c.env.KV_NAMESPACE)
-    let today = new Date()
+    let today = new Date((new Date()).getTime() + getTimezoneOffset(c.env.TIME_ZONE))
     let birthdays = []
     for (let i = 0; i < data.length; i++) {
         // @ts-ignore
